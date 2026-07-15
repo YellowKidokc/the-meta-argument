@@ -1,0 +1,75 @@
+{
+  "case_id": "JP-1945-HIROSHIMA",
+  "actor": "United States government",
+  "action": "Used an atomic bomb against Hiroshima",
+  "target": "Hiroshima military-industrial and civilian population",
+  "mechanism": "Single nuclear airburst with city-scale blast, thermal, and radiation effects",
+  "period": "1945-08-06",
+  "claimed_objective": "Compel Japanese surrender and shorten the war",
+  "outcomes": [
+    "Mass civilian death and injury",
+    "Destruction of military and civilian infrastructure",
+    "Japanese surrender followed within the broader sequence of August 1945 events",
+    "Long-term radiation and survivor effects"
+  ],
+  "sources": [],
+  "variables": {
+    "G": {"answers": [
+      {"question_id": "G1", "answer": "no", "evidence_quality": 0.9, "reason": "The intervention imposed rather than voluntarily absorbed civilian cost."},
+      {"question_id": "G3", "answer": "no", "evidence_quality": 0.9, "reason": "Survivor autonomy and physical capability were severely damaged."}
+    ]},
+    "M": {"answers": [
+      {"question_id": "M1", "answer": "yes", "evidence_quality": 1.0, "reason": "Stated intention was converted into decisive observable action."},
+      {"question_id": "M3", "answer": "mixed", "evidence_quality": 0.6, "reason": "War-ending purpose is disputed against demonstration and targeting purposes."}
+    ]},
+    "E": {"answers": [
+      {"question_id": "E1", "answer": "mixed", "evidence_quality": 0.8, "reason": "Created durable state capacity but primarily destructive capacity."},
+      {"question_id": "E4", "answer": "no", "evidence_quality": 0.9, "reason": "Initiated a self-reinforcing nuclear arms structure."}
+    ]},
+    "S": {"answers": [
+      {"question_id": "S1", "answer": "no", "evidence_quality": 1.0},
+      {"question_id": "S4", "answer": "no", "evidence_quality": 0.9},
+      {"question_id": "S5", "answer": "no", "evidence_quality": 0.9}
+    ]},
+    "T": {"answers": [
+      {"question_id": "T1", "answer": "yes", "evidence_quality": 1.0},
+      {"question_id": "T2", "answer": "no", "evidence_quality": 0.9, "reason": "Civilian population was not a bounded set of military decision-makers."},
+      {"question_id": "T4", "answer": "no", "evidence_quality": 0.9},
+      {"question_id": "T6", "answer": "no", "evidence_quality": 1.0}
+    ]},
+    "K": {"answers": [
+      {"question_id": "K1", "answer": "mixed", "evidence_quality": 0.7},
+      {"question_id": "K2", "answer": "no", "evidence_quality": 0.8, "reason": "Key planning and alternatives were not publicly inspectable at decision time."},
+      {"question_id": "K5", "answer": "mixed", "evidence_quality": 0.6}
+    ]},
+    "R": {"answers": [
+      {"question_id": "R1", "answer": "no", "evidence_quality": 1.0},
+      {"question_id": "R3", "answer": "no", "evidence_quality": 1.0},
+      {"question_id": "R6", "answer": "no", "evidence_quality": 0.9}
+    ]},
+    "Q": {"answers": [
+      {"question_id": "Q1", "answer": "mixed", "evidence_quality": 0.7},
+      {"question_id": "Q3", "answer": "no", "evidence_quality": 0.8},
+      {"question_id": "Q5", "answer": "no", "evidence_quality": 0.9}
+    ]},
+    "F": {"answers": [
+      {"question_id": "F1", "answer": "no", "evidence_quality": 1.0},
+      {"question_id": "F3", "answer": "no", "evidence_quality": 1.0},
+      {"question_id": "F6", "answer": "no", "evidence_quality": 0.9}
+    ]}
+  },
+  "wrapper": {
+    "W": 0,
+    "confidence": 0.55,
+    "note": "Claimed defensive and war-ending orientation is materially disputed; hidden motive is not inferred."
+  },
+  "structural": {
+    "physical_reach": 3,
+    "amplification": 3,
+    "persistence": 3
+  },
+  "warnings": [
+    "Pilot scores are illustrative until the source ledger and inter-rater calibration are complete.",
+    "Japanese surrender cannot be attributed to one event without resolving competing causal explanations."
+  ]
+}
