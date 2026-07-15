@@ -10,10 +10,11 @@ readme = "README.md"
 requires-python = ">=3.10"
 license = {text = "MIT"}
 authors = [{name = "Theophysics Research Initiative"}]
-dependencies = []
+dependencies = ["openpyxl>=3.1"]
 
 [project.scripts]
 meta-score = "meta_argument.cli:main"
+meta-excel-sync = "meta_argument.excel_sync:main"
 
 [tool.setuptools]
 package-dir = {"" = "src"}
