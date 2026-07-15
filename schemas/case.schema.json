@@ -1,0 +1,84 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/the-meta-argument/case.schema.json",
+  "title": "Meta-Argument Atomic Case",
+  "type": "object",
+  "required": ["case_id", "actor", "action", "target", "mechanism", "period", "variables"],
+  "properties": {
+    "case_id": {"type": "string", "minLength": 1},
+    "actor": {"type": "string", "minLength": 1},
+    "action": {"type": "string", "minLength": 1},
+    "target": {"type": "string", "minLength": 1},
+    "mechanism": {"type": "string", "minLength": 1},
+    "period": {"type": "string", "minLength": 1},
+    "claimed_objective": {"type": "string"},
+    "outcomes": {"type": "array", "items": {"type": "string"}},
+    "sources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["title", "url", "source_class"],
+        "properties": {
+          "title": {"type": "string"},
+          "url": {"type": "string", "format": "uri"},
+          "source_class": {"enum": ["primary", "official_data", "scholarship", "reporting", "advocate", "critic"]},
+          "published": {"type": ["string", "null"]},
+          "support": {"type": "string"}
+        },
+        "additionalProperties": true
+      }
+    },
+    "variables": {
+      "type": "object",
+      "propertyNames": {"enum": ["G", "M", "E", "S", "T", "K", "R", "Q", "F"]},
+      "additionalProperties": {"$ref": "#/$defs/variable"}
+    },
+    "wrapper": {
+      "type": "object",
+      "properties": {
+        "W": {"enum": [-1, 0, 1]},
+        "confidence": {"type": "number", "minimum": 0, "maximum": 1},
+        "note": {"type": "string"}
+      },
+      "additionalProperties": false
+    },
+    "structural": {
+      "type": "object",
+      "properties": {
+        "physical_reach": {"type": "number", "minimum": 0, "maximum": 3},
+        "amplification": {"type": "number", "minimum": 0, "maximum": 3},
+        "persistence": {"type": "number", "minimum": 0, "maximum": 3}
+      },
+      "additionalProperties": false
+    },
+    "refusal_states": {
+      "type": "array",
+      "items": {"enum": ["INSUFFICIENTLY_DEFINED", "INSUFFICIENT_EVIDENCE", "ONTOLOGICAL_DEPENDENCY", "OUTCOME_NOT_YET_OBSERVABLE", "CAUSATION_UNRESOLVED"]},
+      "uniqueItems": true
+    },
+    "warnings": {"type": "array", "items": {"type": "string"}}
+  },
+  "$defs": {
+    "answer": {
+      "type": "object",
+      "required": ["question_id", "answer"],
+      "properties": {
+        "question_id": {"type": "string"},
+        "answer": {"enum": ["yes", "no", "mixed", "unknown"]},
+        "evidence_quality": {"type": "number", "minimum": 0, "maximum": 1},
+        "reason": {"type": "string"},
+        "source_ids": {"type": "array", "items": {"type": "string"}}
+      },
+      "additionalProperties": true
+    },
+    "variable": {
+      "type": "object",
+      "required": ["answers"],
+      "properties": {
+        "answers": {"type": "array", "items": {"$ref": "#/$defs/answer"}}
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": true
+}
