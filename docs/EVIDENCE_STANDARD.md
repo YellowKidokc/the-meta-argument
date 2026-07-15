@@ -1,4 +1,4 @@
-# SCORING STANDARD
+# EVIDENCE STANDARD
 
 This document is part of the deterministic first milestone for the Meta-Argument scoring engine.
 

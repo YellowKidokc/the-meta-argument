@@ -1,0 +1,74 @@
+{
+  "actor": "state and church licensors",
+  "action": "restricted and licensed printing",
+  "target": "uncontrolled publication",
+  "affected_parties": [
+    "affected population"
+  ],
+  "claimed_objective": "documented objective",
+  "mechanism": "defined mechanism",
+  "cost_bearers": [
+    "cost bearers"
+  ],
+  "beneficiaries": [
+    "beneficiaries"
+  ],
+  "start_date": "1520-01-01",
+  "end_date": "1700-12-31",
+  "measured_outcomes": [
+    "outcome packet required"
+  ],
+  "counterfactual": "counterfactual packet required",
+  "variables": {
+    "G": {
+      "answers": [
+        {
+          "question_id": "G1",
+          "answer": "UNKNOWN",
+          "evidence_quality": 0.0
+        }
+      ]
+    },
+    "T": {
+      "answers": [
+        {
+          "question_id": "T1",
+          "answer": "UNKNOWN",
+          "evidence_quality": 0.0
+        }
+      ]
+    },
+    "K": {
+      "answers": [
+        {
+          "question_id": "K1",
+          "answer": "UNKNOWN",
+          "evidence_quality": 0.0
+        }
+      ]
+    },
+    "F": {
+      "answers": [
+        {
+          "question_id": "F1",
+          "answer": "UNKNOWN",
+          "evidence_quality": 0.0
+        }
+      ]
+    },
+    "R": {
+      "answers": [
+        {
+          "question_id": "R1",
+          "answer": "UNKNOWN",
+          "evidence_quality": 0.0
+        }
+      ]
+    }
+  },
+  "refusal_states": [
+    "INSUFFICIENT_EVIDENCE"
+  ],
+  "structural_significance": {},
+  "case_id": "printing-press-capture-phase"
+}

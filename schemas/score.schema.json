@@ -1,0 +1,1 @@
+{"$schema":"https://json-schema.org/draft/2020-12/schema","type":"object","required":["status","case_id"],"properties":{"status":{"enum":["SCORED","REFUSED","INVALID"]},"case_id":{"type":"string"},"variables":{"type":"object"},"direction":{"type":"object"},"confidence":{"type":"number"}}}

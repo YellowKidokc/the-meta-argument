@@ -1,0 +1,74 @@
+{
+  "actor": "Chinese Communist Party leadership",
+  "action": "mobilized Cultural Revolution campaigns",
+  "target": "party, education, cultural, and social institutions",
+  "affected_parties": [
+    "affected population"
+  ],
+  "claimed_objective": "documented objective",
+  "mechanism": "defined mechanism",
+  "cost_bearers": [
+    "cost bearers"
+  ],
+  "beneficiaries": [
+    "beneficiaries"
+  ],
+  "start_date": "1966-05-16",
+  "end_date": "1976-10-06",
+  "measured_outcomes": [
+    "outcome packet required"
+  ],
+  "counterfactual": "counterfactual packet required",
+  "variables": {
+    "G": {
+      "answers": [
+        {
+          "question_id": "G1",
+          "answer": "UNKNOWN",
+          "evidence_quality": 0.0
+        }
+      ]
+    },
+    "T": {
+      "answers": [
+        {
+          "question_id": "T1",
+          "answer": "UNKNOWN",
+          "evidence_quality": 0.0
+        }
+      ]
+    },
+    "K": {
+      "answers": [
+        {
+          "question_id": "K1",
+          "answer": "UNKNOWN",
+          "evidence_quality": 0.0
+        }
+      ]
+    },
+    "F": {
+      "answers": [
+        {
+          "question_id": "F1",
+          "answer": "UNKNOWN",
+          "evidence_quality": 0.0
+        }
+      ]
+    },
+    "R": {
+      "answers": [
+        {
+          "question_id": "R1",
+          "answer": "UNKNOWN",
+          "evidence_quality": 0.0
+        }
+      ]
+    }
+  },
+  "refusal_states": [
+    "INSUFFICIENT_EVIDENCE"
+  ],
+  "structural_significance": {},
+  "case_id": "cultural-revolution-1966-1976"
+}

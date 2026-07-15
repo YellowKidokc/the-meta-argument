@@ -1,0 +1,74 @@
+{
+  "actor": "United States",
+  "action": "ratified the Thirteenth Amendment",
+  "target": "legal slavery in the United States",
+  "affected_parties": [
+    "affected population"
+  ],
+  "claimed_objective": "documented objective",
+  "mechanism": "defined mechanism",
+  "cost_bearers": [
+    "cost bearers"
+  ],
+  "beneficiaries": [
+    "beneficiaries"
+  ],
+  "start_date": "1865-01-31",
+  "end_date": "1865-12-06",
+  "measured_outcomes": [
+    "outcome packet required"
+  ],
+  "counterfactual": "counterfactual packet required",
+  "variables": {
+    "G": {
+      "answers": [
+        {
+          "question_id": "G1",
+          "answer": "UNKNOWN",
+          "evidence_quality": 0.0
+        }
+      ]
+    },
+    "T": {
+      "answers": [
+        {
+          "question_id": "T1",
+          "answer": "UNKNOWN",
+          "evidence_quality": 0.0
+        }
+      ]
+    },
+    "K": {
+      "answers": [
+        {
+          "question_id": "K1",
+          "answer": "UNKNOWN",
+          "evidence_quality": 0.0
+        }
+      ]
+    },
+    "F": {
+      "answers": [
+        {
+          "question_id": "F1",
+          "answer": "UNKNOWN",
+          "evidence_quality": 0.0
+        }
+      ]
+    },
+    "R": {
+      "answers": [
+        {
+          "question_id": "R1",
+          "answer": "UNKNOWN",
+          "evidence_quality": 0.0
+        }
+      ]
+    }
+  },
+  "refusal_states": [
+    "INSUFFICIENT_EVIDENCE"
+  ],
+  "structural_significance": {},
+  "case_id": "american-abolition-1865"
+}

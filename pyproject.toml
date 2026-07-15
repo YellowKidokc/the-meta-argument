@@ -1,10 +1,10 @@
 [build-system]
-requires = ["setuptools>=68"]
+requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "the-meta-argument"
-version = "0.1.0"
+version = "0.2.0"
 description = "Deterministic structural scoring engine for the Theophysics Master Equation"
 readme = "README.md"
 requires-python = ">=3.10"

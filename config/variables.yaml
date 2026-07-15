@@ -1,0 +1,12 @@
+master_equation: "χ(W) = C_W[ ∭(G · M · E · S · T · K · R · Q · F) dx dy dt ]"
+public_diagnostic_variables: [G, T, K, F, R]
+variables:
+  G: {name: Grace / Source, core_issue: Did a willing party absorb unresolved cost, and did the intervention restore autonomy without creating hidden control?}
+  M: {name: Motion, core_issue: Was there directed action rather than inert intention?}
+  E: {name: Generator, core_issue: Did the structure produce durable capacity rather than exhaustion?}
+  S: {name: Sin / Entropy, core_issue: Did the structure reduce rather than generate disorder and irreversible damage?}
+  T: {name: Justice / Ledger, core_issue: Did the cost land on the actor who actually caused the damage?}
+  K: {name: Knowledge / Truth, core_issue: Could competent independent parties inspect, challenge, reproduce, and correct the relevant claims?}
+  R: {name: Restoration, core_issue: Was the damage actually repaired, recurrence reduced, and a path back created?}
+  Q: {name: Faith, core_issue: Was commitment under uncertainty bounded, revisable, and evidence-seeking?}
+  F: {name: Network / Trust, core_issue: Were relationships voluntary, reciprocal, plural, and meaningfully escapable?}
