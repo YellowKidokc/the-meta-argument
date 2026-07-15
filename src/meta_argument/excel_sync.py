@@ -7,6 +7,7 @@ from typing import Any, Iterable
 
 from .models import FULL_VARIABLES
 from .rubric import load_questions
+from .research import build_research_bundle, write_research_bundle
 from .scoring import normalize_answer, score_case
 
 INSTRUMENT_SHEET = "5-Variable Instrument"
@@ -33,7 +34,7 @@ _EVENT_ALIASES = {
     "mechanism": ("mechanism", "means"),
     "cost_bearers": ("cost bearers", "cost_bearers", "cost"),
     "beneficiaries": ("beneficiaries", "beneficiary"),
-    "start_date": ("start", "start date"),
+    "start_date": ("start", "start date", "period"),
     "end_date": ("end", "end date"),
     "measured_outcomes": ("outcome", "measured outcome", "measured outcomes"),
     "counterfactual": ("counterfactual", "baseline"),
@@ -42,14 +43,36 @@ _DEFAULT_EVENT_ORDER = ("case_id", "actor", "action", "target", "affected_partie
 _LIST_FIELDS = {"affected_parties", "cost_bearers", "beneficiaries", "measured_outcomes"}
 
 
+def _has_required_sheets(path: Path) -> bool:
+    openpyxl = _require_openpyxl()
+    wb = openpyxl.load_workbook(path, read_only=True, data_only=True)
+    try:
+        names = set(wb.sheetnames)
+        return INSTRUMENT_SHEET in names and CONVERGENCE_SHEET in names
+    finally:
+        wb.close()
+
+
 def find_workbook(root: Path = Path.cwd()) -> Path:
     candidates = [p for pattern in WORKBOOK_PATTERNS for p in root.glob(pattern) if not p.name.startswith("~$")]
     if not candidates:
         raise FileNotFoundError(f"No Excel workbook found in {root}")
-    if len(candidates) == 1:
-        return candidates[0]
-    audited = [p for p in candidates if "AUDITED" in p.stem.upper()]
-    return sorted(audited or candidates, key=lambda p: (p.stat().st_mtime, p.name), reverse=True)[0]
+    matching = [path for path in candidates if _has_required_sheets(path)]
+    if not matching:
+        raise FileNotFoundError(f"No workbook in {root} contains {INSTRUMENT_SHEET!r} and {CONVERGENCE_SHEET!r}")
+    if len(matching) == 1:
+        return matching[0]
+    eleven_sheet = [path for path in matching if _sheet_count(path) == 11]
+    return sorted(eleven_sheet or matching, key=lambda p: (p.stat().st_mtime, p.name), reverse=True)[0]
+
+
+def _sheet_count(path: Path) -> int:
+    openpyxl = _require_openpyxl()
+    wb = openpyxl.load_workbook(path, read_only=True, data_only=True)
+    try:
+        return len(wb.sheetnames)
+    finally:
+        wb.close()
 
 
 def _require_openpyxl() -> Any:
@@ -85,6 +108,11 @@ def _read_event_fields(ws: Any) -> dict[str, Any]:
         key = _event_key(_string(ws[f"A{row}"].value), index)
         value = ws[f"B{row}"].value
         fields[key] = _split_list(value) if key in _LIST_FIELDS else _string(value)
+    period = fields.get("start_date")
+    if period and ".." in period and not fields.get("end_date"):
+        start, end = period.split("..", 1)
+        fields["start_date"] = start.strip()
+        fields["end_date"] = end.strip()
     return fields
 
 
@@ -138,11 +166,27 @@ def case_from_workbook(path: Path | None = None) -> dict[str, Any]:
     return case
 
 
-def _unknown_count(result: dict[str, Any]) -> int:
-    return sum(1 for data in result.get("variables", {}).values() if data.get("raw_score") is None)
+def _unknown_count(case: dict[str, Any]) -> int:
+    return sum(
+        1
+        for variable in VARIABLE_ANSWER_CELLS
+        for answer in case.get("variables", {}).get(variable, {}).get("answers", [])
+        if str(answer.get("answer", "")).upper() == "UNKNOWN"
+    )
 
 
-def write_scores(path: Path, result: dict[str, Any]) -> None:
+def _weakest_public_factor(result: dict[str, Any]) -> str | None:
+    scores = {
+        variable: data.get("raw_score")
+        for variable, data in result.get("variables", {}).items()
+        if variable in VARIABLE_ANSWER_CELLS and data.get("raw_score") is not None
+    }
+    if not scores:
+        return None
+    return min(scores, key=scores.get)
+
+
+def write_scores(path: Path, result: dict[str, Any], case: dict[str, Any] | None = None) -> None:
     openpyxl = _require_openpyxl()
     wb = openpyxl.load_workbook(path)
     try:
@@ -152,11 +196,25 @@ def write_scores(path: Path, result: dict[str, Any]) -> None:
         direction = result.get("direction", {})
         ws[SUMMARY_CELLS["direction"]] = direction.get("label")
         ws[SUMMARY_CELLS["veto"]] = result.get("veto", {}).get("variable")
-        ws[SUMMARY_CELLS["weakest_factor"]] = result.get("veto", {}).get("variable")
-        ws[SUMMARY_CELLS["unknown_count"]] = _unknown_count(result)
+        ws[SUMMARY_CELLS["weakest_factor"]] = _weakest_public_factor(result)
+        ws[SUMMARY_CELLS["unknown_count"]] = _unknown_count(case or {})
         wb.save(path)
     finally:
         wb.close()
+
+
+def _convergence_header(ws: Any) -> tuple[int, list[str]]:
+    best_row = 1
+    best_headers: list[str] = []
+    for row in ws.iter_rows(min_row=1, max_row=min(ws.max_row, 25), values_only=True):
+        headers = [_string(value) for value in row if _string(value)]
+        lowered = {header.lower() for header in headers}
+        if "event" in lowered and ("scorer" in lowered or "rater" in lowered):
+            return best_row, headers
+        if len(headers) > len(best_headers):
+            best_headers = headers
+        best_row += 1
+    return max(1, best_row - 1), best_headers
 
 
 def read_convergence(path: Path | None = None) -> list[dict[str, Any]]:
@@ -165,9 +223,9 @@ def read_convergence(path: Path | None = None) -> list[dict[str, Any]]:
     wb = openpyxl.load_workbook(workbook_path, read_only=True, data_only=True)
     try:
         ws = wb[CONVERGENCE_SHEET]
-        headers = [_string(cell.value) for cell in ws[1] if _string(cell.value)]
+        header_row, headers = _convergence_header(ws)
         rows: list[dict[str, Any]] = []
-        for values in ws.iter_rows(min_row=2, max_col=len(headers), values_only=True):
+        for values in ws.iter_rows(min_row=header_row + 1, max_col=len(headers), values_only=True):
             if not any(value is not None and _string(value) for value in values):
                 continue
             rows.append({headers[i]: values[i] for i in range(len(headers))})
@@ -176,13 +234,14 @@ def read_convergence(path: Path | None = None) -> list[dict[str, Any]]:
         wb.close()
 
 
-def write_convergence(path: Path, rows: Iterable[dict[str, Any]], start_row: int = 2) -> None:
+def write_convergence(path: Path, rows: Iterable[dict[str, Any]], start_row: int | None = None) -> None:
     openpyxl = _require_openpyxl()
     wb = openpyxl.load_workbook(path)
     try:
         ws = wb[CONVERGENCE_SHEET]
-        headers = [_string(cell.value) for cell in ws[1] if _string(cell.value)]
-        for row_offset, row in enumerate(rows, start=start_row):
+        header_row, headers = _convergence_header(ws)
+        first_data_row = start_row or header_row + 1
+        for row_offset, row in enumerate(rows, start=first_data_row):
             for col_index, header in enumerate(headers, start=1):
                 if header in row:
                     ws.cell(row=row_offset, column=col_index).value = row[header]
@@ -191,13 +250,24 @@ def write_convergence(path: Path, rows: Iterable[dict[str, Any]], start_row: int
         wb.close()
 
 
-def sync_workbook(path: Path | None = None) -> dict[str, Any]:
+def sync_workbook(path: Path | None = None, research_dir: Path | None = None) -> dict[str, Any]:
     workbook_path = path or find_workbook()
     case = case_from_workbook(workbook_path)
     result = score_case(case)
+    payload: dict[str, Any] = {"workbook": str(workbook_path), "case": case, "result": result}
     if result.get("status") == "SCORED":
-        write_scores(workbook_path, result)
-    return {"workbook": str(workbook_path), "case": case, "result": result}
+        write_scores(workbook_path, result, case)
+    if research_dir:
+        bundle = build_research_bundle(
+            case,
+            result,
+            evidence_items=case.get("evidence_ledger", []),
+            looked_at=case.get("research_snapshots", []),
+            notes=["Generated by meta-excel-sync from workbook cells; attach research_snapshots/evidence_ledger for source-backed runs."],
+        )
+        paths = write_research_bundle(bundle, research_dir)
+        payload["research_bundle"] = {key: str(value) for key, value in paths.items()}
+    return payload
 
 
 def main() -> None:
@@ -205,8 +275,9 @@ def main() -> None:
     parser.add_argument("workbook", nargs="?", type=Path, help="Workbook path; defaults to the Excel file in the repo root")
     parser.add_argument("--case-json", type=Path, help="Optional path to write the constructed case JSON")
     parser.add_argument("--result-json", type=Path, help="Optional path to write the scoring result JSON")
+    parser.add_argument("--research-dir", type=Path, help="Optional directory for JSON and Markdown research bundle output")
     args = parser.parse_args()
-    payload = sync_workbook(args.workbook)
+    payload = sync_workbook(args.workbook, research_dir=args.research_dir)
     if args.case_json:
         args.case_json.write_text(json.dumps(payload["case"], indent=2, ensure_ascii=False), encoding="utf-8")
     if args.result_json:

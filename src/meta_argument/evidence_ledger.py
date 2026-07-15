@@ -14,6 +14,10 @@ class EvidenceItem:
     supports: list[str] = field(default_factory=list)
     contradicts: list[str] = field(default_factory=list)
     citation: str | None = None
+    source_url: str | None = None
+    source_title: str | None = None
+    publisher: str | None = None
+    publication_date: str | None = None
 
 
 def _clamp(value: float, low: float = 0.0, high: float = 1.0) -> float:
@@ -34,7 +38,11 @@ def normalize_evidence(items: Iterable[dict[str, Any] | EvidenceItem]) -> list[E
             independence_group=item.get("independence_group"),
             supports=list(item.get("supports", [])),
             contradicts=list(item.get("contradicts", [])),
-            citation=item.get("citation") or item.get("url"),
+            citation=item.get("citation") or item.get("url") or item.get("source_url"),
+            source_url=item.get("source_url") or item.get("url"),
+            source_title=item.get("source_title") or item.get("title"),
+            publisher=item.get("publisher"),
+            publication_date=item.get("publication_date"),
         ))
     return normalized
 
