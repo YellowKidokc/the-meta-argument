@@ -28,8 +28,13 @@ The local engine can:
 ```bash
 python -m pip install -e .
 meta-score examples/fixture.json --anti-gaming --output /tmp/score.json --markdown /tmp/score.md
+meta-excel-sync "GMF 3 the Trilima (1).xlsx" --research-dir knowledge_base/drafts
 python -m unittest discover -s tests
 ```
+
+## Knowledge-base workflow
+
+The Excel sync can now emit a research bundle: a JSON record plus a Markdown note containing the case, score, evidence ledger, places looked, source snapshots, and review notes. Use this as the draft layer for a growing wiki-style corpus before promoting reviewed cases into `cases/`. See `docs/KNOWLEDGE_BASE.md` for the operating workflow.
 
 ## Integrity rules
 
