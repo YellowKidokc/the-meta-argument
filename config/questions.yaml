@@ -1,0 +1,29 @@
+version: 0.1.0
+variables:
+  G:
+    - {id: G1, weight: 1, text: Did a willing party absorb a real unresolved cost?}
+    - {id: G2, weight: 1, text: Could the cost-bearer meaningfully refuse without coercion?}
+    - {id: G3, weight: 1, text: Did the intervention restore recipient autonomy?}
+    - {id: G4, weight: 1, text: Did it avoid hidden debt, surveillance, domination, or dependency?}
+  T:
+    - {id: T1, weight: 1, text: Was the damage identifiable?}
+    - {id: T2, weight: 1, text: Was the victim or injured party identifiable?}
+    - {id: T3, weight: 1, text: Was the causal actor identified with meaningful agency?}
+    - {id: T4, weight: 1, text: Was the response proportional and targeted to the causal actor?}
+    - {id: T5, weight: 1, text: Were due process, appeal, and false-positive correction available?}
+    - {id: T6, weight: 1, text: Did it avoid exporting costs to non-offenders or future generations?}
+  K:
+    - {id: K1, weight: 1, text: Were primary evidence and methods accessible to qualified independent review?}
+    - {id: K2, weight: 1, text: Could relevant claims be openly challenged without retaliation?}
+    - {id: K3, weight: 1, text: Were errors trackable and correctable?}
+    - {id: K4, weight: 1, text: Were conflicts of interest and interpreter monopolies limited?}
+  F:
+    - {id: F1, weight: 1, text: Could affected parties join, leave, dissent, or form alternatives?}
+    - {id: F2, weight: 1, text: Did exit avoid loss of unrelated necessities?}
+    - {id: F3, weight: 1, text: Was accountability reciprocal rather than selectively enforced?}
+    - {id: F4, weight: 1, text: Did it avoid surveillance, platform dependency, or single points of social failure?}
+  R:
+    - {id: R1, weight: 1, text: Was damage measurably repaired or function restored?}
+    - {id: R2, weight: 1, text: Was recurrence reduced?}
+    - {id: R3, weight: 1, text: Was there a path to reintegration and restored agency?}
+    - {id: R4, weight: 1, text: Did it avoid permanent stigma or indefinite emergency status?}

@@ -1,0 +1,8 @@
+source_classes:
+  primary: 1.0
+  official: 0.9
+  academic: 0.85
+  supporter: 0.6
+  critic: 0.6
+  reporting: 0.7
+  historical: 0.8
