@@ -15,6 +15,10 @@ Excel workbook input
 
 The scoring engine must stay deterministic. Research can be assisted by humans or external tools, but every claim that affects a score should be written down as evidence with enough source metadata to audit it later.
 
+## Single-sentence seed
+
+If the workbook is being used as an intake form, put a plain-language event or factual sentence in `B12` of the `5-Variable Instrument` sheet. When no row labels are present beside `B12:B18`, the sync treats `B12` as a seed statement, creates a draft case with unknown atomic fields, and carries the sentence into the research bundle. That draft is only a starting point: it must be decomposed into actor, action, target, mechanism, outcomes, and counterfactual before anyone treats the score as meaningful.
+
 ## Running from Excel
 
 ```bash

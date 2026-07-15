@@ -22,3 +22,25 @@ def test_weakest_public_factor_uses_public_five_not_full_veto():
         }
     }
     assert _weakest_public_factor(result) == "T"
+
+
+class _Cell:
+    def __init__(self, value):
+        self.value = value
+
+
+class _SeedSheet:
+    def __getitem__(self, cell):
+        if cell == "B12":
+            return _Cell("Modern conflict escalated after a cross-border strike")
+        return _Cell(None)
+
+
+def test_seed_statement_starts_draft_case_when_event_rows_are_unlabelled():
+    from meta_argument.excel_sync import _read_event_fields
+
+    fields = _read_event_fields(_SeedSheet())
+
+    assert fields["seed_statement"] == "Modern conflict escalated after a cross-border strike"
+    assert fields["action"] == "Modern conflict escalated after a cross-border strike"
+    assert fields["case_id"].startswith("excel-seed-modern-conflict")

@@ -13,6 +13,7 @@ from .scoring import normalize_answer, score_case
 INSTRUMENT_SHEET = "5-Variable Instrument"
 CONVERGENCE_SHEET = "Convergence Map"
 EVENT_ROWS = range(12, 19)
+SEED_CELL = "B12"
 VARIABLE_ANSWER_CELLS: dict[str, tuple[str, ...]] = {
     "G": ("B26", "B27", "B28"),
     "T": ("B37", "B38", "B39", "B40", "B41"),
@@ -94,6 +95,13 @@ def _split_list(value: Any) -> list[str]:
     return [item.strip() for chunk in text.split(";") for item in chunk.split(",") if item.strip()]
 
 
+def _slug(value: str) -> str:
+    import re
+
+    slug = re.sub(r"[^A-Za-z0-9]+", "-", value.strip()).strip("-").lower()
+    return slug[:80] or "excel-seed-case"
+
+
 def _event_key(label: str, fallback_index: int) -> str:
     token = label.strip().lower().replace(":", "")
     for key, aliases in _EVENT_ALIASES.items():
@@ -104,16 +112,42 @@ def _event_key(label: str, fallback_index: int) -> str:
 
 def _read_event_fields(ws: Any) -> dict[str, Any]:
     fields: dict[str, Any] = {}
+    labelled_rows = 0
     for index, row in enumerate(EVENT_ROWS):
-        key = _event_key(_string(ws[f"A{row}"].value), index)
+        label = _string(ws[f"A{row}"].value)
+        if label:
+            labelled_rows += 1
+        key = _event_key(label, index)
         value = ws[f"B{row}"].value
         fields[key] = _split_list(value) if key in _LIST_FIELDS else _string(value)
+    seed = _string(ws[SEED_CELL].value)
+    if seed and labelled_rows == 0:
+        fields = _seed_event_fields(seed)
     period = fields.get("start_date")
     if period and ".." in period and not fields.get("end_date"):
         start, end = period.split("..", 1)
         fields["start_date"] = start.strip()
         fields["end_date"] = end.strip()
     return fields
+
+
+def _seed_event_fields(seed: str) -> dict[str, Any]:
+    return {
+        "case_id": f"excel-seed-{_slug(seed)}",
+        "actor": "UNKNOWN",
+        "action": seed,
+        "target": "UNKNOWN",
+        "affected_parties": ["UNKNOWN"],
+        "claimed_objective": "UNKNOWN",
+        "mechanism": seed,
+        "cost_bearers": ["UNKNOWN"],
+        "beneficiaries": ["UNKNOWN"],
+        "start_date": "UNKNOWN",
+        "end_date": "UNKNOWN",
+        "measured_outcomes": [seed],
+        "counterfactual": "UNKNOWN",
+        "seed_statement": seed,
+    }
 
 
 def _question_ids_by_variable() -> dict[str, list[str]]:
@@ -163,6 +197,9 @@ def case_from_workbook(path: Path | None = None) -> dict[str, Any]:
         "counterfactual": event.get("counterfactual") or "UNKNOWN",
         "variables": variables,
     }
+    if event.get("seed_statement"):
+        case["seed_statement"] = event["seed_statement"]
+        case.setdefault("warnings", []).append("Draft case created from a single workbook seed statement; decompose into atomic fields before relying on the score.")
     return case
 
 
